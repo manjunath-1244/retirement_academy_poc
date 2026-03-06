@@ -74,7 +74,8 @@ class Admin::CourseListsController < ApplicationController
         :position,
         :_destroy,
         videos_attributes: [:id, :title, :description, :file, :_destroy],
-        images_attributes: [:id, :title, :description, :file, :_destroy]
+        images_attributes: [:id, :title, :description, :file, :_destroy],
+        text_contents_attributes: [:id, :body, :_destroy]
       ]
     )
 

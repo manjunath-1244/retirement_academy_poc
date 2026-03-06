@@ -12,16 +12,22 @@ class Admin::CourseListSectionsController < ApplicationController
 
   def new
     @section = @course_list.course_list_sections.new
-    seed_content_blocks(@section)
+    apply_default_section_values(@section)
+
+    if @section.save
+      redirect_to admin_course_list_course_list_section_path(@course_list, @section, open_picker: 1), notice: "Section created. Choose content to add."
+    else
+      redirect_to admin_course_list_course_list_sections_path(@course_list), alert: "Unable to create section."
+    end
   end
 
   def create
     @section = @course_list.course_list_sections.new(section_params)
+    apply_default_section_values(@section)
 
     if @section.save
       redirect_to admin_course_list_course_list_section_path(@course_list, @section), notice: "Section created successfully."
     else
-      seed_content_blocks(@section)
       render :new, status: :unprocessable_entity
     end
   end
@@ -32,7 +38,6 @@ class Admin::CourseListSectionsController < ApplicationController
     if @section.update(section_params)
       redirect_to admin_course_list_course_list_section_path(@course_list, @section), notice: "Section updated successfully."
     else
-      seed_content_blocks(@section)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -53,16 +58,12 @@ class Admin::CourseListSectionsController < ApplicationController
   end
 
   def section_params
-    params.require(:course_list_section).permit(
-      :title,
-      :position,
-      videos_attributes: [:id, :title, :description, :file, :_destroy],
-      images_attributes: [:id, :title, :description, :file, :_destroy]
-    )
+    params.fetch(:course_list_section, {}).permit(:title, :position)
   end
 
-  def seed_content_blocks(section)
-    section.videos.build if section.videos.empty?
-    section.images.build if section.images.empty?
+  def apply_default_section_values(section)
+    next_position = @course_list.course_list_sections.maximum(:position).to_i + 1
+    section.position = next_position if section.position.blank?
+    section.title = "Section #{section.position}" if section.title.blank?
   end
 end

@@ -16,10 +16,10 @@
     <%= f.number_field :position %>
   </div>
 
-  <div class="nested-group">
+  <div class="nested-group" data-content-group="video">
     <div class="nested-group-head">
       <h4>Videos</h4>
-      <button type="button" class="btn btn-secondary" data-add-video>Add Video</button>
+      <button type="button" class="btn btn-secondary" data-add-video>Add More Video</button>
     </div>
     <div data-videos-container>
       <%= f.fields_for :videos do |video_fields| %>
@@ -33,10 +33,10 @@
     </template>
   </div>
 
-  <div class="nested-group">
+  <div class="nested-group" data-content-group="image">
     <div class="nested-group-head">
       <h4>Images</h4>
-      <button type="button" class="btn btn-secondary" data-add-image>Add Image</button>
+      <button type="button" class="btn btn-secondary" data-add-image>Add More Image</button>
     </div>
     <div data-images-container>
       <%= f.fields_for :images do |image_fields| %>
@@ -46,6 +46,23 @@
     <template data-image-template>
       <%= f.fields_for :images, Image.new, child_index: "NEW_IMAGE" do |image_fields| %>
         <%= render "image_fields", f: image_fields %>
+      <% end %>
+    </template>
+  </div>
+
+  <div class="nested-group" data-content-group="text">
+    <div class="nested-group-head">
+      <h4>Text</h4>
+      <button type="button" class="btn btn-secondary" data-add-text>Add More Text</button>
+    </div>
+    <div data-texts-container>
+      <%= f.fields_for :text_contents do |text_fields| %>
+        <%= render "text_fields", f: text_fields %>
+      <% end %>
+    </div>
+    <template data-text-template>
+      <%= f.fields_for :text_contents, TextContent.new, child_index: "NEW_TEXT" do |text_fields| %>
+        <%= render "text_fields", f: text_fields %>
       <% end %>
     </template>
   </div>

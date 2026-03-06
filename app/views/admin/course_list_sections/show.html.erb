@@ -1,8 +1,15 @@
-<h1 class="page-title"><%= @section.title %></h1>
-<p class="page-subtitle">Position: <%= @section.position %></p>
+<h1 class="page-title">Section <%= @section.position.presence || "-" %>: <%= @section.title %></h1>
+<p class="page-subtitle">Course: <%= @course_list.title %></p>
 
 <div class="card">
-  <h2>Content Blocks</h2>
+  <h2>Add Content</h2>
+  <p class="page-subtitle">Choose what you want to add in this section.</p>
+
+  <div class="actions">
+    <button type="button" class="btn" data-modal-open="section-content-picker">Add Content</button>
+  </div>
+
+  <h2>Manage Existing Content</h2>
   <ul class="list">
     <li><%= link_to "Videos (#{@section.videos.count})", admin_course_list_course_list_section_videos_path(@course_list, @section) %></li>
     <li><%= link_to "Images (#{@section.images.count})", admin_course_list_course_list_section_images_path(@course_list, @section) %></li>
@@ -18,4 +25,79 @@
 
 <div class="actions">
   <%= link_to "Back to Sections", admin_course_list_course_list_sections_path(@course_list), class: "btn btn-secondary" %>
+</div>
+
+<div class="modal-backdrop" data-modal="section-content-picker" data-open-on-load="<%= params[:open_picker].to_s == "1" %>" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="content-picker-title">
+    <h2 id="content-picker-title">What do you want to add?</h2>
+    <p class="page-subtitle">Select a content type for Section <%= @section.position.presence || "-" %>.</p>
+
+    <div class="modal-actions">
+      <button type="button" class="btn" data-content-switch="video">Video</button>
+      <button type="button" class="btn" data-content-switch="image">Image</button>
+      <button type="button" class="btn" data-content-switch="text">Text</button>
+      <%= link_to "Review", new_admin_course_list_course_list_section_review_path(@course_list, @section), class: "btn btn-secondary" %>
+    </div>
+
+    <div class="content-form-stack">
+      <div class="content-form-panel" data-content-panel="video" hidden>
+        <h3>Add Video (Upload File)</h3>
+        <%= form_with model: [:admin, @course_list, @section, Video.new] do |f| %>
+          <div class="field">
+            <%= f.label :title, "Video Title" %>
+            <%= f.text_field :title, required: true %>
+          </div>
+          <div class="field">
+            <%= f.label :description, "Video Description" %>
+            <%= f.text_area :description, rows: 3 %>
+          </div>
+          <div class="field">
+            <%= f.label :file, "Video File" %>
+            <%= f.file_field :file, accept: "video/*", required: true %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Save Video", class: "btn" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="content-form-panel" data-content-panel="image" hidden>
+        <h3>Add Image (Upload File)</h3>
+        <%= form_with model: [:admin, @course_list, @section, Image.new] do |f| %>
+          <div class="field">
+            <%= f.label :title, "Image Title" %>
+            <%= f.text_field :title, required: true %>
+          </div>
+          <div class="field">
+            <%= f.label :description, "Image Description" %>
+            <%= f.text_area :description, rows: 3 %>
+          </div>
+          <div class="field">
+            <%= f.label :file, "Image File" %>
+            <%= f.file_field :file, accept: "image/*", required: true %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Save Image", class: "btn" %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="content-form-panel" data-content-panel="text" hidden>
+        <h3>Add Text</h3>
+        <%= form_with model: [:admin, @course_list, @section, TextContent.new] do |f| %>
+          <div class="field">
+            <%= f.label :body, "Text Content" %>
+            <%= f.text_area :body, rows: 6, required: true %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Save Text", class: "btn" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" data-modal-close="section-content-picker">Close</button>
+    </div>
+  </div>
 </div>

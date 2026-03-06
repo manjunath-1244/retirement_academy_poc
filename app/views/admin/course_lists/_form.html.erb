@@ -28,9 +28,9 @@
   <div class="card">
     <div class="nested-section-head">
       <h2>Sections</h2>
-      <button type="button" class="btn" data-add-section>Add Section</button>
+      <button type="button" class="btn" data-modal-open="course-section-picker">Section</button>
     </div>
-    <p class="page-subtitle">Create sections directly in this course form. Each section can contain multiple videos and images.</p>
+    <p class="page-subtitle">Click Section to choose what you want to add first. You can add Text/Video/Image after opening each section.</p>
 
     <div data-sections-container>
       <%= f.fields_for :course_list_sections do |section_fields| %>
@@ -40,12 +40,27 @@
 
     <template id="section-template">
       <% section = CourseListSection.new %>
-      <% section.videos.build %>
-      <% section.images.build %>
       <%= f.fields_for :course_list_sections, section, child_index: "NEW_SECTION" do |section_fields| %>
         <%= render "section_fields", f: section_fields %>
       <% end %>
     </template>
+  </div>
+
+  <div class="modal-backdrop" data-modal="course-section-picker" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="course-section-picker-title">
+      <h2 id="course-section-picker-title">Section Options</h2>
+      <p class="page-subtitle">Choose content type. A new section will be added, then you can add selected content in that section page.</p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" data-create-section="text">Text</button>
+        <button type="button" class="btn" data-create-section="video">Video</button>
+        <button type="button" class="btn" data-create-section="image">Image</button>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" data-modal-close="course-section-picker">Close</button>
+      </div>
+    </div>
   </div>
 
   <%= f.submit "Save Course", class: "btn" %>

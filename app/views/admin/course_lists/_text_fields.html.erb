@@ -1,0 +1,8 @@
+<div class="nested-item" data-nested-item>
+  <%= f.hidden_field :_destroy, value: "0", data: { destroy_field: true } %>
+  <div class="field">
+    <%= f.label :body, "Text Content" %>
+    <%= f.text_area :body, rows: 4 %>
+  </div>
+  <button type="button" class="btn btn-secondary" data-remove-nested>Remove Text</button>
+</div>

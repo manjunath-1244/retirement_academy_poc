@@ -39,6 +39,17 @@ class Admin::CourseListSectionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "new section creates section and opens content picker" do
+    sign_in_as(@admin)
+
+    assert_difference("@course.course_list_sections.count", 1) do
+      get new_admin_course_list_course_list_section_url(@course)
+    end
+
+    created = @course.course_list_sections.order(:id).last
+    assert_redirected_to admin_course_list_course_list_section_url(@course, created, open_picker: 1)
+  end
+
   private
 
   def sign_in_as(user, password: "password123")
