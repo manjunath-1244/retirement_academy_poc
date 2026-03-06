@@ -1,0 +1,11 @@
+one_union_one:
+  user: one
+  union: one
+
+two_union_two:
+  user: two
+  union: two
+
+admin_union_one:
+  user: admin
+  union: one

@@ -1,0 +1,21 @@
+<h1 class="page-title"><%= @section.title %></h1>
+<p class="page-subtitle">Position: <%= @section.position %></p>
+
+<div class="card">
+  <h2>Content Blocks</h2>
+  <ul class="list">
+    <li><%= link_to "Videos (#{@section.videos.count})", admin_course_list_course_list_section_videos_path(@course_list, @section) %></li>
+    <li><%= link_to "Images (#{@section.images.count})", admin_course_list_course_list_section_images_path(@course_list, @section) %></li>
+    <li><%= link_to "Text Content (#{@section.text_contents.count})", admin_course_list_course_list_section_text_contents_path(@course_list, @section) %></li>
+    <li><%= link_to "Reviews (#{@section.reviews.count})", admin_course_list_course_list_section_reviews_path(@course_list, @section) %></li>
+  </ul>
+
+  <div class="actions">
+    <%= link_to "Edit Section", edit_admin_course_list_course_list_section_path(@course_list, @section), class: "btn" %>
+    <%= button_to "Delete Section", admin_course_list_course_list_section_path(@course_list, @section), method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Delete this section?" } %>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to "Back to Sections", admin_course_list_course_list_sections_path(@course_list), class: "btn btn-secondary" %>
+</div>

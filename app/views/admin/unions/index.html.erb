@@ -1,0 +1,22 @@
+<h1 class="page-title">Manage Unions</h1>
+
+<div class="actions">
+  <%= link_to "New Union", new_admin_union_path, class: "btn" %>
+</div>
+
+<% if @unions.any? %>
+  <div class="grid grid-2">
+    <% @unions.each do |union| %>
+      <article class="card">
+        <h2><%= link_to union.name, admin_union_path(union) %></h2>
+        <p><strong>Subdomain:</strong> <%= union.subdomain.presence || "N/A" %></p>
+        <p><strong>Contact:</strong> <%= union.contact_email.presence || "N/A" %></p>
+        <p><strong>Users:</strong> <%= union.users.count %></p>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <p>No unions available.</p>
+  </div>
+<% end %>

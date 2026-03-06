@@ -1,0 +1,52 @@
+<%= form_with model: [:admin, @course_list] do |f| %>
+  <% if @course_list.errors.any? %>
+    <div class="flash alert">
+      <h2><%= pluralize(@course_list.errors.count, "error") %> prevented this course from saving:</h2>
+      <ul class="list">
+        <% @course_list.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description, rows: 5 %>
+  </div>
+
+  <div class="field">
+    <label>Visible to unions</label>
+    <%= f.collection_check_boxes :union_ids, @available_unions, :id, :name %>
+  </div>
+
+  <div class="card">
+    <div class="nested-section-head">
+      <h2>Sections</h2>
+      <button type="button" class="btn" data-add-section>Add Section</button>
+    </div>
+    <p class="page-subtitle">Create sections directly in this course form. Each section can contain multiple videos and images.</p>
+
+    <div data-sections-container>
+      <%= f.fields_for :course_list_sections do |section_fields| %>
+        <%= render "section_fields", f: section_fields %>
+      <% end %>
+    </div>
+
+    <template id="section-template">
+      <% section = CourseListSection.new %>
+      <% section.videos.build %>
+      <% section.images.build %>
+      <%= f.fields_for :course_list_sections, section, child_index: "NEW_SECTION" do |section_fields| %>
+        <%= render "section_fields", f: section_fields %>
+      <% end %>
+    </template>
+  </div>
+
+  <%= f.submit "Save Course", class: "btn" %>
+<% end %>

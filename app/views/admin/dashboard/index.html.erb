@@ -1,0 +1,36 @@
+<h1 class="page-title">Admin Dashboard</h1>
+<p class="page-subtitle">Manage courses, sections, content blocks, and users.</p>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Courses</h2>
+    <p>Create and assign courses to unions.</p>
+    <%= link_to "Manage Courses", admin_course_lists_path, class: "btn" %>
+  </div>
+
+  <div class="card">
+    <h2>Users</h2>
+    <p>Manage users and assign/remove users from unions.</p>
+    <%= link_to "Manage Users", admin_users_path, class: "btn" %>
+  </div>
+
+  <% if current_user.super_admin? %>
+    <div class="card">
+      <h2>Unions</h2>
+      <p>Create, edit, and delete unions.</p>
+      <%= link_to "Manage Unions", admin_unions_path, class: "btn" %>
+    </div>
+
+    <div class="card">
+      <h2>Front Page</h2>
+      <p>Edit landing page intro, header, and footer text.</p>
+      <%= link_to "Edit Front Page", edit_admin_frontpage_content_path, class: "btn" %>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <h2>Progress</h2>
+    <p>Track course completion by union.</p>
+    <%= link_to "Course Progress", admin_course_progresses_path, class: "btn" %>
+  </div>
+</div>

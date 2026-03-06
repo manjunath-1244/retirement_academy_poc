@@ -1,0 +1,44 @@
+<h1 class="page-title">Admin: Users</h1>
+
+<% if current_user.super_admin? %>
+  <div class="actions">
+    <%= link_to "Create User", new_admin_user_path, class: "btn" %>
+  </div>
+<% end %>
+
+<% if @users.any? %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Union</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.email %></td>
+            <td><span class="badge"><%= user.role %></span></td>
+            <td>
+              <% names = user.unions.map(&:name).sort %>
+              <%= names.any? ? names.join(", ") : "Unassigned" %>
+            </td>
+            <td>
+              <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-secondary" %>
+              <% if current_user.super_admin? && current_user != user %>
+                <%= button_to "Delete", admin_user_path(user), method: :delete, class: "btn btn-secondary", form: { class: "inline-form" }, data: { turbo_confirm: "Delete this user?" } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card">
+    <p>No users found.</p>
+  </div>
+<% end %>

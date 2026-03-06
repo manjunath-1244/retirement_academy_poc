@@ -1,0 +1,78 @@
+<div class="section-hero card">
+  <p class="hero-kicker"><%= @course.title %></p>
+  <h1 class="page-title"><%= @section.title %></h1>
+  <p class="page-subtitle">Section <%= @section_index %> of <%= @section_total %></p>
+  <p class="page-subtitle">
+    Item <%= @section_items.any? ? @step : 0 %> of <%= @section_items.size %>
+  </p>
+
+  <div class="section-nav">
+    <%= link_to "Back to Course", course_list_path(@course), class: "btn btn-secondary" %>
+    <% if @previous_section %>
+      <%= link_to "Previous Section", course_list_course_list_section_path(@course, @previous_section), class: "btn btn-secondary" %>
+    <% end %>
+    <% if @next_section %>
+      <%= link_to "Next Section", course_list_course_list_section_path(@course, @next_section), class: "btn" %>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <% if @progress&.completed? %>
+      <span class="badge">Completed</span>
+      <% if @next_section %>
+        <%= link_to "Next Section", course_list_course_list_section_path(@course, @next_section), class: "btn" %>
+      <% end %>
+    <% else %>
+      <% if @section_items.empty? || @next_item_step.nil? %>
+        <%= button_to "Mark Section Complete", complete_course_list_course_list_section_path(@course, @section), method: :post, class: "btn" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Section Content</h2>
+
+  <% if @current_item %>
+    <article class="content-card">
+      <p class="hero-kicker"><%= @current_item[:type].to_s.humanize %></p>
+      <h3><%= @current_item[:title] %></h3>
+
+      <% if @current_item[:type] == :video %>
+        <% if @current_item[:record].file.attached? %>
+          <%= video_tag url_for(@current_item[:record].file), controls: true, preload: "metadata", class: "media-player" %>
+          <% if @current_item[:record].description.present? %>
+            <p><%= @current_item[:record].description %></p>
+          <% end %>
+        <% else %>
+          <p>Video file is missing.</p>
+        <% end %>
+      <% elsif @current_item[:type] == :image %>
+        <% if @current_item[:record].file.attached? %>
+          <%= image_tag url_for(@current_item[:record].file), alt: @current_item[:title], class: "content-image" %>
+          <% if @current_item[:record].description.present? %>
+            <p><%= @current_item[:record].description %></p>
+          <% end %>
+        <% else %>
+          <p>Image file is missing.</p>
+        <% end %>
+      <% elsif @current_item[:type] == :text %>
+        <div><%= simple_format(@current_item[:body]) %></div>
+      <% elsif @current_item[:type] == :review %>
+        <p><strong>Q:</strong> <%= @current_item[:question] %></p>
+        <p><strong>A:</strong> <%= @current_item[:answer] %></p>
+      <% end %>
+    </article>
+
+    <div class="section-nav">
+      <% if @previous_item_step %>
+        <%= link_to "Previous Item", course_list_course_list_section_path(@course, @section, step: @previous_item_step), class: "btn btn-secondary" %>
+      <% end %>
+      <% if @next_item_step %>
+        <%= link_to "Next Item", course_list_course_list_section_path(@course, @section, step: @next_item_step), class: "btn" %>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No content is available in this section yet.</p>
+  <% end %>
+</div>

@@ -1,0 +1,28 @@
+<%= form_with model: [:admin, @course_list, @section, @image] do |f| %>
+  <% if @image.errors.any? %>
+    <div class="flash alert">
+      <ul class="list">
+        <% @image.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description, rows: 4 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :file, "Image File" %>
+    <%= f.file_field :file, accept: "image/*" %>
+  </div>
+
+  <%= f.submit "Save Image", class: "btn" %>
+<% end %>

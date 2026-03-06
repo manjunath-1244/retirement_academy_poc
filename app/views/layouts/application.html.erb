@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RetirementAcademy</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <%= link_to frontpage_header_text, root_path, class: "brand" %>
+
+        <nav class="nav-links">
+          <% if user_signed_in? %>
+            <%= link_to "Courses", course_lists_path %>
+            <% if current_user.super_admin? %>
+              <%= link_to "Super Admin", admin_root_path %>
+            <% elsif current_user.admin? %>
+              <%= link_to "Admin", admin_root_path %>
+            <% end %>
+            <span><%= current_user.email %></span>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "inline-btn", form: { class: "inline-form" } %>
+          <% else %>
+            <%= link_to "Sign in", new_user_session_path %>
+            <%= link_to "Sign up", new_user_registration_path %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <% flash.each do |type, message| %>
+        <div class="flash <%= type %>"><%= message %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

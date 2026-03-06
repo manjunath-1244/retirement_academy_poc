@@ -1,0 +1,27 @@
+<h1 class="page-title">Videos: <%= @section.title %></h1>
+
+<div class="actions">
+  <%= link_to "Add Video", new_admin_course_list_course_list_section_video_path(@course_list, @section), class: "btn" %>
+  <%= link_to "Back to Section", admin_course_list_course_list_section_path(@course_list, @section), class: "btn btn-secondary" %>
+</div>
+
+<% if @videos.any? %>
+  <div class="grid">
+    <% @videos.each do |video| %>
+      <div class="card">
+        <p><strong><%= video.title %></strong></p>
+        <% if video.file.attached? %>
+          <%= video_tag url_for(video.file), controls: true, preload: "metadata", style: "max-width:100%;" %>
+        <% else %>
+          <p>No file attached.</p>
+        <% end %>
+        <div class="actions">
+          <%= link_to "Edit", edit_admin_course_list_course_list_section_video_path(@course_list, @section, video), class: "btn btn-secondary" %>
+          <%= button_to "Delete", admin_course_list_course_list_section_video_path(@course_list, @section, video), method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Delete video?" } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card"><p>No videos yet.</p></div>
+<% end %>

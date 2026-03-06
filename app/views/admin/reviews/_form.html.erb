@@ -1,0 +1,23 @@
+<%= form_with model: [:admin, @course_list, @section, @review] do |f| %>
+  <% if @review.errors.any? %>
+    <div class="flash alert">
+      <ul class="list">
+        <% @review.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :question %>
+    <%= f.text_area :question, rows: 3 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :answer %>
+    <%= f.text_area :answer, rows: 4 %>
+  </div>
+
+  <%= f.submit "Save Review", class: "btn" %>
+<% end %>

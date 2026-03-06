@@ -1,0 +1,18 @@
+<%= form_with model: [:admin, @course_list, @section, @text_content] do |f| %>
+  <% if @text_content.errors.any? %>
+    <div class="flash alert">
+      <ul class="list">
+        <% @text_content.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :body %>
+    <%= f.text_area :body, rows: 7 %>
+  </div>
+
+  <%= f.submit "Save Text", class: "btn" %>
+<% end %>

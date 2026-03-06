@@ -1,0 +1,23 @@
+<h1 class="page-title">Courses</h1>
+<p class="page-subtitle">Choose a learning module assigned to your union.</p>
+
+<% if @course_lists.any? %>
+  <div class="course-grid">
+    <% @course_lists.each do |course| %>
+      <article class="course-card">
+        <div class="course-card-head">
+          <h2><%= link_to course.title, course_list_path(course) %></h2>
+          <span class="badge"><%= pluralize(course.course_list_sections.count, "section") %></span>
+        </div>
+        <p><%= course.description.presence || "No description yet." %></p>
+        <div class="actions">
+          <%= link_to "Open Course", course_list_path(course), class: "btn" %>
+        </div>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <p>No courses are visible for your union yet.</p>
+  </div>
+<% end %>

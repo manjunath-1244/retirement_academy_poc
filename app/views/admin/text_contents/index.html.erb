@@ -1,0 +1,22 @@
+<h1 class="page-title">Text Content: <%= @section.title %></h1>
+
+<div class="actions">
+  <%= link_to "Add Text", new_admin_course_list_course_list_section_text_content_path(@course_list, @section), class: "btn" %>
+  <%= link_to "Back to Section", admin_course_list_course_list_section_path(@course_list, @section), class: "btn btn-secondary" %>
+</div>
+
+<% if @text_contents.any? %>
+  <div class="grid">
+    <% @text_contents.each do |text_content| %>
+      <div class="card">
+        <p><%= truncate(text_content.body, length: 180) %></p>
+        <div class="actions">
+          <%= link_to "Edit", edit_admin_course_list_course_list_section_text_content_path(@course_list, @section, text_content), class: "btn btn-secondary" %>
+          <%= button_to "Delete", admin_course_list_course_list_section_text_content_path(@course_list, @section, text_content), method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Delete text content?" } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card"><p>No text content yet.</p></div>
+<% end %>

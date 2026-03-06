@@ -1,0 +1,30 @@
+<h1 class="page-title">Admin: Courses</h1>
+
+<div class="actions">
+  <%= link_to "New Course", new_admin_course_list_path, class: "btn" %>
+</div>
+
+<% if @course_lists.any? %>
+  <% if current_user.super_admin? %>
+    <p class="page-subtitle">Drag and drop courses to set display order.</p>
+  <% end %>
+  <div class="grid grid-2" data-course-sort-list data-reorder-url="<%= reorder_admin_course_lists_path %>">
+    <% @course_lists.each do |course| %>
+      <article class="card <%= "draggable-course" if current_user.super_admin? %>" <%= "draggable=true" if current_user.super_admin? %> data-course-id="<%= course.id %>">
+        <% if current_user.super_admin? %>
+          <p class="drag-hint">Drag</p>
+        <% end %>
+        <h2><%= link_to course.title, admin_course_list_path(course) %></h2>
+        <p><%= truncate(course.description.to_s, length: 140) %></p>
+        <p>
+          <strong>Unions:</strong>
+          <%= course.unions.any? ? course.unions.map(&:name).join(", ") : "No unions assigned" %>
+        </p>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <p>No courses yet.</p>
+  </div>
+<% end %>

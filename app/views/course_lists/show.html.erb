@@ -1,0 +1,41 @@
+<h1 class="page-title"><%= @course.title %></h1>
+<p class="page-subtitle"><%= @course.description.presence || "No description available." %></p>
+
+<div class="card">
+  <strong>Progress: <%= @progress_percent %>%</strong>
+  <div class="progress">
+    <div class="progress-bar" style="width: <%= @progress_percent %>%"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Sections</h2>
+
+  <% if @sections.any? %>
+    <ol class="section-list">
+      <% @sections.each_with_index do |section, index| %>
+        <% current_completed = @completed_section_ids.include?(section.id) %>
+        <li class="section-item">
+          <div>
+            <div class="section-item-title">
+              <%= link_to section.title, course_list_course_list_section_path(@course, section) %>
+            </div>
+            <small>Section <%= index + 1 %></small>
+          </div>
+          <div class="section-item-meta">
+            <% if current_completed %>
+              <span class="badge">Completed</span>
+            <% end %>
+            <%= link_to "Open", course_list_course_list_section_path(@course, section), class: "btn btn-secondary" %>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <p>No sections available yet.</p>
+  <% end %>
+</div>
+
+<div class="actions">
+  <%= link_to "Back to Courses", course_lists_path, class: "btn btn-secondary" %>
+</div>

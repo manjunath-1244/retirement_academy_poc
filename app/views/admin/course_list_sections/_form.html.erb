@@ -1,0 +1,152 @@
+<%= form_with model: [:admin, @course_list, @section] do |f| %>
+  <% if @section.errors.any? %>
+    <div class="flash alert">
+      <h2><%= pluralize(@section.errors.count, "error") %> prevented this section from saving:</h2>
+      <ul class="list">
+        <% @section.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :position %>
+    <%= f.number_field :position %>
+  </div>
+
+  <div class="card" data-section-block>
+    <div class="nested-group">
+      <div class="nested-group-head">
+        <h3>Videos</h3>
+        <button type="button" class="btn btn-secondary" data-add-video>Add More Video</button>
+      </div>
+
+      <div data-videos-container>
+        <%= f.fields_for :videos do |vf| %>
+          <div class="nested-item" data-nested-item>
+            <%= vf.hidden_field :id if vf.object&.persisted? %>
+            <%= vf.hidden_field :_destroy, value: 0, data: { destroy_field: true } %>
+
+            <div class="field">
+              <%= vf.label :title, "Video Title" %>
+              <%= vf.text_field :title %>
+            </div>
+
+            <div class="field">
+              <%= vf.label :description, "Video Description" %>
+              <%= vf.text_area :description, rows: 3 %>
+            </div>
+
+            <div class="field">
+              <%= vf.label :file, "Video File" %>
+              <%= vf.file_field :file, accept: "video/*" %>
+            </div>
+
+            <% if vf.object&.persisted? && vf.object.file.attached? %>
+              <%= video_tag url_for(vf.object.file), controls: true, preload: "metadata", class: "media-player" %>
+            <% end %>
+
+            <button type="button" class="btn btn-secondary" data-remove-nested>Remove Video</button>
+          </div>
+        <% end %>
+      </div>
+
+      <template data-video-template>
+        <%= f.fields_for :videos, Video.new, child_index: "NEW_VIDEO" do |vf| %>
+          <div class="nested-item" data-nested-item>
+            <%= vf.hidden_field :_destroy, value: 0, data: { destroy_field: true } %>
+
+            <div class="field">
+              <%= vf.label :title, "Video Title" %>
+              <%= vf.text_field :title %>
+            </div>
+
+            <div class="field">
+              <%= vf.label :description, "Video Description" %>
+              <%= vf.text_area :description, rows: 3 %>
+            </div>
+
+            <div class="field">
+              <%= vf.label :file, "Video File" %>
+              <%= vf.file_field :file, accept: "video/*" %>
+            </div>
+
+            <button type="button" class="btn btn-secondary" data-remove-nested>Remove Video</button>
+          </div>
+        <% end %>
+      </template>
+    </div>
+
+    <div class="nested-group">
+      <div class="nested-group-head">
+        <h3>Images</h3>
+        <button type="button" class="btn btn-secondary" data-add-image>Add More Image</button>
+      </div>
+
+      <div data-images-container>
+        <%= f.fields_for :images do |inf| %>
+          <div class="nested-item" data-nested-item>
+            <%= inf.hidden_field :id if inf.object&.persisted? %>
+            <%= inf.hidden_field :_destroy, value: 0, data: { destroy_field: true } %>
+
+            <div class="field">
+              <%= inf.label :title, "Image Title" %>
+              <%= inf.text_field :title %>
+            </div>
+
+            <div class="field">
+              <%= inf.label :description, "Image Description" %>
+              <%= inf.text_area :description, rows: 3 %>
+            </div>
+
+            <div class="field">
+              <%= inf.label :file, "Image File" %>
+              <%= inf.file_field :file, accept: "image/*" %>
+            </div>
+
+            <% if inf.object&.persisted? && inf.object.file.attached? %>
+              <%= image_tag url_for(inf.object.file), class: "content-image" %>
+            <% end %>
+
+            <button type="button" class="btn btn-secondary" data-remove-nested>Remove Image</button>
+          </div>
+        <% end %>
+      </div>
+
+      <template data-image-template>
+        <%= f.fields_for :images, Image.new, child_index: "NEW_IMAGE" do |inf| %>
+          <div class="nested-item" data-nested-item>
+            <%= inf.hidden_field :_destroy, value: 0, data: { destroy_field: true } %>
+
+            <div class="field">
+              <%= inf.label :title, "Image Title" %>
+              <%= inf.text_field :title %>
+            </div>
+
+            <div class="field">
+              <%= inf.label :description, "Image Description" %>
+              <%= inf.text_area :description, rows: 3 %>
+            </div>
+
+            <div class="field">
+              <%= inf.label :file, "Image File" %>
+              <%= inf.file_field :file, accept: "image/*" %>
+            </div>
+
+            <button type="button" class="btn btn-secondary" data-remove-nested>Remove Image</button>
+          </div>
+        <% end %>
+      </template>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Save Section", class: "btn" %>
+  </div>
+<% end %>

@@ -1,0 +1,16 @@
+<h1 class="page-title"><%= @course_list.title %></h1>
+
+<div class="card">
+  <p><%= @course_list.description.presence || "No description." %></p>
+  <p><strong>Visible to unions:</strong> <%= @course_list.unions.any? ? @course_list.unions.map(&:name).join(", ") : "None" %></p>
+
+  <div class="actions">
+    <%= link_to "Edit Course", edit_admin_course_list_path(@course_list), class: "btn" %>
+    <%= link_to "Manage Sections", admin_course_list_course_list_sections_path(@course_list), class: "btn btn-secondary" %>
+    <%= button_to "Delete Course", admin_course_list_path(@course_list), method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Delete this course?" } %>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to "Back to Courses", admin_course_lists_path, class: "btn btn-secondary" %>
+</div>

@@ -1,0 +1,59 @@
+<h1 class="page-title">Course Progress</h1>
+<p class="page-subtitle">Track learner completion by union and course.</p>
+
+<div class="card">
+  <%= form_with url: admin_course_progresses_path, method: :get, local: true do %>
+    <div class="field">
+      <label>Union</label>
+      <%= select_tag :union_id, options_from_collection_for_select(@available_unions, :id, :name, @selected_union&.id), include_blank: false %>
+    </div>
+
+    <div class="field">
+      <label>Course</label>
+      <%= select_tag :course_list_id, options_from_collection_for_select(@available_courses, :id, :title, @selected_course&.id), include_blank: false %>
+    </div>
+
+    <%= submit_tag "Filter", class: "btn" %>
+  <% end %>
+</div>
+
+<% if @selected_union && @selected_course %>
+  <div class="card">
+    <h2><%= @selected_union.name %> - <%= @selected_course.title %></h2>
+    <p><strong>Total sections:</strong> <%= @total_sections %></p>
+
+    <% if @users.any? %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Completed Sections</th>
+              <th>Progress</th>
+              <th>Completed Course</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <% done = @progress_by_user[user.id].to_i %>
+              <% percent = @total_sections.zero? ? 0 : ((done.to_f / @total_sections) * 100).round %>
+              <% completion = @completion_by_user[user.id] %>
+              <tr>
+                <td><%= user.email %></td>
+                <td><%= done %> / <%= @total_sections %></td>
+                <td><%= percent %>%</td>
+                <td><%= completion&.completed_at ? completion.completed_at.strftime("%Y-%m-%d %H:%M") : "No" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p>No learners found in this union.</p>
+    <% end %>
+  </div>
+<% else %>
+  <div class="card">
+    <p>Assign at least one course to a union to view progress.</p>
+  </div>
+<% end %>

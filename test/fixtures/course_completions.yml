@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  course_list: one
+  completed_at: 2026-03-05 14:08:45
+
+two:
+  user: two
+  course_list: two
+  completed_at: 2026-03-05 14:08:45

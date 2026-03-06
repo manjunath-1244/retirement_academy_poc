@@ -1,0 +1,40 @@
+<%= form_with model: [:admin, @union] do |f| %>
+  <% if @union.errors.any? %>
+    <div class="flash alert">
+      <h2><%= pluralize(@union.errors.count, "error") %> prevented this union from saving:</h2>
+      <ul class="list">
+        <% @union.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, required: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :subdomain %>
+    <%= f.text_field :subdomain %>
+  </div>
+
+  <div class="field">
+    <%= f.label :contact_email %>
+    <%= f.email_field :contact_email %>
+  </div>
+
+  <div class="field">
+    <label>Union Users</label>
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" data-select-action="all" data-select-target="union-users">Select All Users</button>
+      <button type="button" class="btn btn-secondary" data-select-action="none" data-select-target="union-users">Clear All Users</button>
+    </div>
+    <div id="union-users" class="multi-select-list">
+      <%= f.collection_check_boxes :user_ids, User.where(role: "member").or(User.where(role: "admin")).order(:email), :id, :email %>
+    </div>
+  </div>
+
+  <%= f.submit "Save Union", class: "btn" %>
+<% end %>

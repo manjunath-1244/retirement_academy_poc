@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  union: one
+  course_list: one
+
+two:
+  union: two
+  course_list: two

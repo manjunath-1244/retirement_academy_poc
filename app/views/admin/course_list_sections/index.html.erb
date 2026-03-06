@@ -1,0 +1,22 @@
+<h1 class="page-title">Sections: <%= @course_list.title %></h1>
+
+<div class="actions">
+  <%= link_to "New Section", new_admin_course_list_course_list_section_path(@course_list), class: "btn" %>
+  <%= link_to "Back to Course", admin_course_list_path(@course_list), class: "btn btn-secondary" %>
+</div>
+
+<% if @sections.any? %>
+  <div class="card">
+    <ol class="list">
+      <% @sections.each do |section| %>
+        <li>
+          <%= link_to "#{section.position}: #{section.title}", admin_course_list_course_list_section_path(@course_list, section) %>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+<% else %>
+  <div class="card">
+    <p>No sections yet.</p>
+  </div>
+<% end %>

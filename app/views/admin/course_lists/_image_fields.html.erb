@@ -1,0 +1,16 @@
+<div class="nested-item" data-nested-item>
+  <%= f.hidden_field :_destroy, value: "0", data: { destroy_field: true } %>
+  <div class="field">
+    <%= f.label :title, "Image Title" %>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :description, "Image Description" %>
+    <%= f.text_area :description, rows: 3 %>
+  </div>
+  <div class="field">
+    <%= f.label :file, "Image File" %>
+    <%= f.file_field :file %>
+  </div>
+  <button type="button" class="btn btn-secondary" data-remove-nested>Remove Image</button>
+</div>

@@ -1,0 +1,25 @@
+<section class="hero">
+  <div class="hero-panel">
+    <p class="hero-kicker">Learning Platform</p>
+    <h1><%= @frontpage.hero_title %></h1>
+    <p class="hero-copy"><%= @frontpage.hero_subtitle %></p>
+
+    <div class="actions">
+      <% if user_signed_in? %>
+        <%= link_to "Go to Courses", course_lists_path, class: "btn" %>
+      <% else %>
+        <%= link_to "Sign In", new_user_session_path, class: "btn" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="hero-panel hero-guide">
+    <h2>How It Works</h2>
+    <div><%= simple_format(@frontpage.how_it_works) %></div>
+  </div>
+</section>
+
+<footer class="landing-footer">
+  <p><%= @frontpage.footer_text %></p>
+</footer>

@@ -1,0 +1,16 @@
+<h1 class="page-title"><%= @union.name %></h1>
+
+<div class="card">
+  <p><strong>Subdomain:</strong> <%= @union.subdomain.presence || "N/A" %></p>
+  <p><strong>Contact email:</strong> <%= @union.contact_email.presence || "N/A" %></p>
+  <p><strong>Users:</strong> <%= @union.users.order(:email).pluck(:email).join(", ").presence || "No users assigned" %></p>
+
+  <div class="actions">
+    <%= link_to "Edit Union", edit_admin_union_path(@union), class: "btn" %>
+    <%= button_to "Delete Union", admin_union_path(@union), method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Delete this union?" } %>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to "Back to Unions", admin_unions_path, class: "btn btn-secondary" %>
+</div>

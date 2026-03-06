@@ -1,0 +1,44 @@
+<h1 class="page-title">Edit Front Page</h1>
+<p class="page-subtitle">Update landing page header/footer text and project introduction content.</p>
+
+<div class="card">
+  <%= form_with model: @frontpage, url: admin_frontpage_content_path, method: :patch do |f| %>
+    <% if @frontpage.errors.any? %>
+      <div class="flash alert">
+        <h2><%= pluralize(@frontpage.errors.count, "error") %> prevented saving:</h2>
+        <ul class="list">
+          <% @frontpage.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :header_text, "Header Brand Text" %>
+      <%= f.text_field :header_text %>
+    </div>
+
+    <div class="field">
+      <%= f.label :hero_title, "Front Page Title" %>
+      <%= f.text_field :hero_title %>
+    </div>
+
+    <div class="field">
+      <%= f.label :hero_subtitle, "Front Page Subtitle" %>
+      <%= f.text_area :hero_subtitle, rows: 3 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :how_it_works, "How Users Can Use The Platform" %>
+      <%= f.text_area :how_it_works, rows: 6 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :footer_text, "Footer Text" %>
+      <%= f.text_field :footer_text %>
+    </div>
+
+    <%= f.submit "Save Front Page", class: "btn" %>
+  <% end %>
+</div>
