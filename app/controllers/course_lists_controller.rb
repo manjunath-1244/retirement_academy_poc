@@ -1,5 +1,6 @@
 class CourseListsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_course, only: [:show, :complete]
 
   def index
     @frontpage = FrontpageContent.current
@@ -12,9 +13,14 @@ class CourseListsController < ApplicationController
   end
 
   def show
-    @course = visible_course_scope.includes(:course_list_sections).find(params[:id])
     @sections = @course.course_list_sections.order(:position, :id)
     @completed_section_ids = completed_section_ids(@course)
+    @course_completion = current_user.course_completions.find_by(course_list: @course)
+    @quiz_available = @course.course_quiz_questions.any?
+    @all_sections_completed = @sections.any? && @completed_section_ids.size == @sections.size
+    @quiz_completed = @course_completion&.quiz_completed_at.present?
+    @course_completed = @course_completion&.completed_at.present?
+    @first_section = @sections.first
 
     total = @sections.count
     completed = @completed_section_ids.size
@@ -26,7 +32,33 @@ class CourseListsController < ApplicationController
                         end
   end
 
+  def complete
+    sections = @course.course_list_sections.order(:position, :id)
+    completed_ids = completed_section_ids(@course)
+    all_sections_completed = sections.any? && completed_ids.size == sections.size
+    quiz_available = @course.course_quiz_questions.any?
+    completion = current_user.course_completions.find_or_initialize_by(course_list: @course)
+
+    unless all_sections_completed
+      redirect_to course_list_path(@course), alert: "Please complete all sections before completing the course."
+      return
+    end
+
+    if quiz_available && completion.quiz_completed_at.blank?
+      redirect_to course_list_quiz_path(@course), alert: "Please complete the quiz before completing the course."
+      return
+    end
+
+    completion.completed_at ||= Time.current
+    completion.save!
+    redirect_to course_list_path(@course), notice: "Course completed successfully."
+  end
+
   private
+
+  def set_course
+    @course = visible_course_scope.includes(:course_list_sections, :course_quiz_questions).find(params[:id])
+  end
 
   def visible_course_scope
     return CourseList.all if current_user.admin?

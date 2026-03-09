@@ -1,0 +1,71 @@
+<h1 class="page-title">Final Quiz: <%= @course.title %></h1>
+
+<% if @quiz_finished %>
+  <p class="page-subtitle">All questions completed.</p>
+  <div class="card">
+    <p class="quiz-feedback quiz-feedback-correct">Quiz finished.</p>
+    <div class="actions">
+      <%= link_to "Back to Course", course_list_path(@course), class: "btn" %>
+    </div>
+  </div>
+<% else %>
+  <p class="page-subtitle">Question <%= @question_index + 1 %> of <%= @questions.size %></p>
+
+  <%= turbo_frame_tag "quiz_question" do %>
+    <div class="card">
+      <article class="content-card quiz-card <%= @show_feedback ? (@result[:correct] ? 'quiz-correct' : 'quiz-incorrect') : '' %>">
+        <div class="quiz-question-row">
+          <p class="quiz-question-text"><%= @question.question %></p>
+
+          <% if @show_feedback %>
+            <aside class="quiz-inline-feedback">
+              <p class="quiz-feedback <%= @result[:correct] ? 'quiz-feedback-correct' : 'quiz-feedback-incorrect' %>">
+                (<%= @result[:correct] ? "Right" : "Wrong" %>)
+              </p>
+              <% unless @result[:correct] %>
+                <p><strong>Correct answer:</strong> <%= @result[:correct_text] %></p>
+              <% end %>
+              <p><strong>Explanation:</strong> <%= @result[:explanation] %></p>
+              <div class="actions">
+                <%= link_to "Try This Question Again", course_list_quiz_path(@course, q: @question_index), class: "btn btn-secondary" %>
+              </div>
+            </aside>
+          <% end %>
+        </div>
+
+        <%= form_with url: course_list_submit_quiz_path(@course), method: :post do %>
+          <%= hidden_field_tag :q, @question_index %>
+
+          <div class="quiz-options">
+            <% @question.options.each do |option_number, option_text| %>
+              <label class="quiz-option">
+                <%= radio_button_tag :selected_option, option_number, @selected_option == option_number, required: true, disabled: @show_feedback %>
+                <span><%= option_text %></span>
+              </label>
+            <% end %>
+          </div>
+
+          <% unless @show_feedback %>
+            <div class="actions">
+              <%= submit_tag "Check Answer", class: "btn" %>
+            </div>
+          <% end %>
+        <% end %>
+      </article>
+
+      <div class="actions">
+        <% unless @show_feedback && @next_question_index.blank? %>
+          <%= link_to "Back to Course", course_list_path(@course), class: "btn btn-secondary" %>
+        <% end %>
+
+        <% if @show_feedback && @next_question_index.present? %>
+          <%= link_to "Next Question", course_list_quiz_path(@course, q: @next_question_index), class: "btn" %>
+        <% end %>
+
+        <% if @show_feedback && @next_question_index.blank? %>
+          <%= link_to "Finish Quiz", course_list_path(@course), class: "btn" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

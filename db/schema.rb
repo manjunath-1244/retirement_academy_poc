@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_09_090000) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_09_141500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_09_090000) do
     t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "quiz_completed_at"
     t.index ["course_list_id"], name: "index_course_completions_on_course_list_id"
     t.index ["user_id", "course_list_id"], name: "index_course_completions_on_user_id_and_course_list_id", unique: true
     t.index ["user_id"], name: "index_course_completions_on_user_id"
@@ -68,6 +69,22 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_09_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position"
+  end
+
+  create_table "course_quiz_questions", force: :cascade do |t|
+    t.bigint "course_list_id", null: false
+    t.text "question", null: false
+    t.string "option_one", null: false
+    t.string "option_two", null: false
+    t.string "option_three", null: false
+    t.string "option_four", null: false
+    t.integer "correct_option", null: false
+    t.text "answer_explanation", null: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_list_id", "position"], name: "index_course_quiz_questions_on_course_list_id_and_position"
+    t.index ["course_list_id"], name: "index_course_quiz_questions_on_course_list_id"
   end
 
   create_table "frontpage_contents", force: :cascade do |t|
@@ -180,6 +197,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_09_090000) do
   add_foreign_key "course_completions", "course_lists"
   add_foreign_key "course_completions", "users"
   add_foreign_key "course_list_sections", "course_lists"
+  add_foreign_key "course_quiz_questions", "course_lists"
   add_foreign_key "images", "course_list_sections"
   add_foreign_key "progresses", "course_list_sections"
   add_foreign_key "progresses", "users"

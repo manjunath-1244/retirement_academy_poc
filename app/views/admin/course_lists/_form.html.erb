@@ -55,12 +55,33 @@
         <button type="button" class="btn" data-create-section="text">Text</button>
         <button type="button" class="btn" data-create-section="video">Video</button>
         <button type="button" class="btn" data-create-section="image">Image</button>
+        <button type="button" class="btn" data-add-quiz-question>Quiz</button>
       </div>
 
       <div class="actions">
         <button type="button" class="btn btn-secondary" data-modal-close="course-section-picker">Close</button>
       </div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="nested-section-head">
+      <h2>Final Quiz Questions</h2>
+      <button type="button" class="btn" data-add-quiz-question>Add Question</button>
+    </div>
+    <p class="page-subtitle">Users will answer these questions after all course sections are completed.</p>
+
+    <div data-quiz-questions-container>
+      <%= f.fields_for :course_quiz_questions do |quiz_question_fields| %>
+        <%= render "quiz_question_fields", f: quiz_question_fields %>
+      <% end %>
+    </div>
+
+    <template data-quiz-question-template>
+      <%= f.fields_for :course_quiz_questions, CourseQuizQuestion.new, child_index: "NEW_QUIZ_QUESTION" do |quiz_question_fields| %>
+        <%= render "quiz_question_fields", f: quiz_question_fields %>
+      <% end %>
+    </template>
   </div>
 
   <%= f.submit "Save Course", class: "btn" %>

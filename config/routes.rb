@@ -21,6 +21,11 @@ Rails.application.routes.draw do
   end
 
   resources :course_lists, only: [:index, :show] do
+    post :complete, on: :member
+
+    resource :quiz, only: [:show], controller: "course_list_quizzes"
+    post "quiz", to: "course_list_quizzes#submit", as: :submit_quiz
+
     resources :course_list_sections, only: [:show] do
       post :complete, on: :member
     end

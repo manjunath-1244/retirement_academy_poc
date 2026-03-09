@@ -3,6 +3,7 @@
 <div class="card">
   <p><%= @course_list.description.presence || "No description." %></p>
   <p><strong>Visible to unions:</strong> <%= @course_list.unions.any? ? @course_list.unions.map(&:name).join(", ") : "None" %></p>
+  <p><strong>Final quiz questions:</strong> <%= @course_list.course_quiz_questions.count %></p>
 
   <div class="actions">
     <%= link_to "Edit Course", edit_admin_course_list_path(@course_list), class: "btn" %>

@@ -6,6 +6,7 @@ document.addEventListener("click", function (event) {
   var addVideoTrigger = target.closest("[data-add-video]");
   var addImageTrigger = target.closest("[data-add-image]");
   var addTextTrigger = target.closest("[data-add-text]");
+  var addQuizQuestionTrigger = target.closest("[data-add-quiz-question]");
 
   function openModal(modal) {
     modal.hidden = false;
@@ -149,6 +150,22 @@ document.addEventListener("click", function (event) {
     var textToken = Date.now().toString() + Math.random().toString().slice(2, 6);
     var textHtml = textTemplate.innerHTML.replace(/NEW_TEXT/g, textToken);
     textContainer.insertAdjacentHTML("beforeend", textHtml);
+    return;
+  }
+
+  if (addQuizQuestionTrigger) {
+    var quizContainer = document.querySelector("[data-quiz-questions-container]");
+    var quizTemplate = document.querySelector("template[data-quiz-question-template]");
+    if (!quizContainer || !quizTemplate) return;
+
+    var quizToken = Date.now().toString() + Math.random().toString().slice(2, 6);
+    var quizHtml = quizTemplate.innerHTML.replace(/NEW_QUIZ_QUESTION/g, quizToken);
+    quizContainer.insertAdjacentHTML("beforeend", quizHtml);
+
+    var sectionPicker = document.querySelector("[data-modal='course-section-picker']");
+    if (sectionPicker && !sectionPicker.hidden) {
+      hideModal(sectionPicker);
+    }
     return;
   }
 

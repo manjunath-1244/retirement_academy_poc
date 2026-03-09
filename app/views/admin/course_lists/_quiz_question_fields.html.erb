@@ -1,0 +1,48 @@
+<div class="nested-item" data-nested-item>
+  <%= f.hidden_field :_destroy, value: "0", data: { destroy_field: true } %>
+
+  <div class="nested-group-head">
+    <h4>Quiz Question</h4>
+    <button type="button" class="btn btn-danger" data-remove-nested>Remove Question</button>
+  </div>
+
+  <div class="field">
+    <%= f.label :question, "Question" %>
+    <%= f.text_area :question, rows: 3 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :option_one, "Option 1" %>
+    <%= f.text_field :option_one %>
+  </div>
+
+  <div class="field">
+    <%= f.label :option_two, "Option 2" %>
+    <%= f.text_field :option_two %>
+  </div>
+
+  <div class="field">
+    <%= f.label :option_three, "Option 3" %>
+    <%= f.text_field :option_three %>
+  </div>
+
+  <div class="field">
+    <%= f.label :option_four, "Option 4" %>
+    <%= f.text_field :option_four %>
+  </div>
+
+  <div class="field">
+    <%= f.label :correct_option, "Correct Option" %>
+    <%= f.select :correct_option, options_for_select([["Option 1", 1], ["Option 2", 2], ["Option 3", 3], ["Option 4", 4]], f.object.correct_option), { include_blank: "Select correct option" } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :answer_explanation, "Answer Explanation" %>
+    <%= f.text_area :answer_explanation, rows: 4 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :position, "Question Position" %>
+    <%= f.number_field :position %>
+  </div>
+</div>

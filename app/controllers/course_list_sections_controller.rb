@@ -7,6 +7,9 @@ class CourseListSectionsController < ApplicationController
     @progress = current_user.progresses.find_by(course_list_section: @section)
     @previous_section = previous_section
     @next_section = next_section
+    @quiz_available = @course.course_quiz_questions.exists?
+    @all_sections_completed = all_sections_completed?
+    @course_completion = current_user.course_completions.find_by(course_list: @course)
     @ordered_sections = @course.course_list_sections.order(:position, :id).to_a
     @section_index = @ordered_sections.index { |section| section.id == @section.id }.to_i + 1
     @section_total = @ordered_sections.size
@@ -22,9 +25,11 @@ class CourseListSectionsController < ApplicationController
     progress.completed = true
     progress.save!
 
-    maybe_mark_course_complete!
-
-    redirect_to course_list_course_list_section_path(@course, @section), notice: "Section marked as complete. Continue to the next section."
+    if all_sections_completed?
+      redirect_to course_list_path(@course), notice: "All sections completed. Attempt the final quiz."
+    else
+      redirect_to course_list_course_list_section_path(@course, @section), notice: "Section marked as complete. Continue to the next section."
+    end
   end
 
   private
@@ -62,20 +67,15 @@ class CourseListSectionsController < ApplicationController
     ordered[index - 1]
   end
 
-  def maybe_mark_course_complete!
+  def all_sections_completed?
     total_sections = @course.course_list_sections.count
-    return if total_sections.zero?
+    return false if total_sections.zero?
 
     completed_sections = current_user.progresses
                                      .joins(:course_list_section)
                                      .where(completed: true, course_list_sections: { course_list_id: @course.id })
                                      .count
-
-    return unless completed_sections == total_sections
-
-    completion = current_user.course_completions.find_or_initialize_by(course_list: @course)
-    completion.completed_at ||= Time.current
-    completion.save!
+    completed_sections == total_sections
   end
 
   def build_section_items

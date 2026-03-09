@@ -19,8 +19,8 @@
   <div class="actions">
     <% if @progress&.completed? %>
       <span class="badge">Completed</span>
-      <% if @next_section %>
-        <%= link_to "Next Section", course_list_course_list_section_path(@course, @next_section), class: "btn" %>
+      <% if !@next_section && @quiz_available && @all_sections_completed %>
+        <%= link_to(@course_completion.present? ? "Open Final Quiz" : "Attempt Final Quiz", course_list_quiz_path(@course), class: "btn") %>
       <% end %>
     <% else %>
       <% if @section_items.empty? || @next_item_step.nil? %>

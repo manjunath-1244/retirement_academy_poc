@@ -6,6 +6,29 @@
   <div class="progress">
     <div class="progress-bar" style="width: <%= @progress_percent %>%"></div>
   </div>
+
+  <% if @quiz_available %>
+    <p class="page-subtitle">
+      Final quiz: <%= @quiz_completed ? "Completed" : "Pending" %>
+      (<%= @course.course_quiz_questions.size %> questions)
+    </p>
+    <div class="actions">
+      <%= link_to(@quiz_completed ? "Open Final Quiz" : "Attempt Final Quiz", course_list_quiz_path(@course), class: "btn") %>
+    </div>
+  <% end %>
+
+  <% if @all_sections_completed && (!@quiz_available || @quiz_completed) && !@course_completed %>
+    <div class="actions">
+      <%= button_to "Complete Course", complete_course_list_path(@course), method: :post, class: "btn" %>
+    </div>
+  <% end %>
+
+  <% if @course_completed && @first_section.present? %>
+    <p class="page-subtitle"><strong>Course completed.</strong></p>
+    <div class="actions">
+      <%= link_to "Learn Again", course_list_course_list_section_path(@course, @first_section), class: "btn btn-secondary" %>
+    </div>
+  <% end %>
 </div>
 
 <div class="card">
@@ -30,6 +53,22 @@
           </div>
         </li>
       <% end %>
+
+      <% if @quiz_available %>
+        <li class="section-item">
+          <div>
+            <div class="section-item-title">Final Quiz</div>
+            <small>Final Step</small>
+          </div>
+      <div class="section-item-meta">
+        <% if @quiz_completed %>
+          <span class="badge">Completed</span>
+        <% else %>
+          <span class="badge">Pending</span>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
     </ol>
   <% else %>
     <p>No sections available yet.</p>
