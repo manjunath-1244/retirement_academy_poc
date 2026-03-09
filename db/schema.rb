@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_06_150000) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_09_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,6 +78,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_06_150000) do
     t.string "footer_text", default: "Built for union learning and course completion tracking.", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "overview_title", default: "Course overview", null: false
+    t.text "overview_subtitle", default: "Review the Retirement Academy introductory content.", null: false
+    t.text "overview_body", default: "Welcome to the Retirement Academy. This curriculum is designed to help you make the most of your employer retirement plan. Let’s get started.", null: false
+    t.string "learning_panel_title", default: "Get started learning.", null: false
   end
 
   create_table "images", force: :cascade do |t|

@@ -10,20 +10,27 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
-  <body>
+  <body class="<%= user_signed_in? ? "signed-in" : "signed-out" %> <%= "#{controller_path.tr('/', '-')}-#{action_name}" %>">
     <header class="topbar">
       <div class="topbar-inner">
-        <%= link_to frontpage_header_text, root_path, class: "brand" %>
+        <%= link_to (user_signed_in? ? course_lists_path : root_path), class: "brand" do %>
+          <span class="brand-mark">
+            <span class="brand-dot"></span>
+            <span class="brand-plan">PlanMember</span>
+          </span>
+          <span class="brand-divider"></span>
+          <span class="brand-academy"><%= frontpage_header_text %></span>
+        <% end %>
 
         <nav class="nav-links">
           <% if user_signed_in? %>
-            <%= link_to "Courses", course_lists_path %>
+            <%= link_to "Home", course_lists_path %>
             <% if current_user.super_admin? %>
               <%= link_to "Super Admin", admin_root_path %>
             <% elsif current_user.admin? %>
               <%= link_to "Admin", admin_root_path %>
             <% end %>
-            <span><%= current_user.email %></span>
+            <span class="user-email"><%= current_user.email %></span>
             <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "inline-btn", form: { class: "inline-form" } %>
           <% else %>
             <%= link_to "Sign in", new_user_session_path %>

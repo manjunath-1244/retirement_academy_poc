@@ -2,7 +2,13 @@ class CourseListsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @course_lists = visible_course_scope.includes(:course_list_sections).order(:position, :title)
+    @frontpage = FrontpageContent.current
+    @course_lists = visible_course_scope
+                    .includes(course_list_sections: [{ videos: { file_attachment: :blob } }])
+                    .order(:position, :title)
+    @featured_course = @course_lists.first
+    @overview_video_attachment = @frontpage.overview_video if @frontpage.overview_video.attached?
+    @featured_video = featured_video_for(@featured_course)
   end
 
   def show
@@ -38,5 +44,17 @@ class CourseListsController < ApplicationController
                 .joins(:course_list_section)
                 .where(completed: true, course_list_sections: { course_list_id: course.id })
                 .pluck(:course_list_section_id)
+  end
+
+  def featured_video_for(course)
+    return unless course
+
+    sections = course.course_list_sections.sort_by { |section| [section.position || 0, section.id] }
+    sections.each do |section|
+      video = section.videos.min_by { |record| [record.created_at, record.id] }
+      return video if video
+    end
+
+    nil
   end
 end

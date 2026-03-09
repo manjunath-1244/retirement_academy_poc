@@ -39,6 +39,39 @@
       <%= f.text_field :footer_text %>
     </div>
 
+    <hr>
+    <h2>Course Overview Page (After Login)</h2>
+
+    <div class="field">
+      <%= f.label :overview_title, "Overview Title" %>
+      <%= f.text_field :overview_title %>
+    </div>
+
+    <div class="field">
+      <%= f.label :overview_subtitle, "Overview Subtitle" %>
+      <%= f.text_area :overview_subtitle, rows: 3 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :overview_body, "Overview Description" %>
+      <%= f.text_area :overview_body, rows: 4 %>
+    </div>
+
+    <div class="field">
+      <%= f.label :learning_panel_title, "Learning Panel Title" %>
+      <%= f.text_field :learning_panel_title %>
+    </div>
+
+    <div class="field">
+      <%= f.label :overview_video, "Overview Intro Video (Optional)" %>
+      <%= f.file_field :overview_video, accept: "video/*" %>
+      <% if @frontpage.overview_video.attached? %>
+        <p class="page-subtitle">
+          Current video: <%= @frontpage.overview_video.filename.to_s %>
+        </p>
+      <% end %>
+    </div>
+
     <%= f.submit "Save Front Page", class: "btn" %>
   <% end %>
 </div>
