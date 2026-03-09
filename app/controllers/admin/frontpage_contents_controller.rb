@@ -20,6 +20,17 @@ class Admin::FrontpageContentsController < ApplicationController
   private
 
   def frontpage_params
-    params.require(:frontpage_content).permit(:hero_title, :hero_subtitle, :how_it_works, :header_text, :footer_text)
+    params.require(:frontpage_content).permit(
+      :hero_title,
+      :hero_subtitle,
+      :how_it_works,
+      :header_text,
+      :footer_text,
+      :overview_title,
+      :overview_subtitle,
+      :overview_body,
+      :learning_panel_title,
+      :overview_video
+    )
   end
 end
