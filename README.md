@@ -15,7 +15,10 @@ A Ruby on Rails learning platform where unions can manage member training course
 - Course management with section/content authoring
 - Drag-and-drop course ordering (super admin)
 - Learner flow with item-by-item section navigation
+- Final quiz flow with per-question feedback
 - Section and course completion tracking
+- Course completion rules (all sections + quiz when configured)
+- Automatic course completion email (sent once on first completion)
 - Admin/super admin progress report by union/course
 
 ## Roles and Access
@@ -43,6 +46,8 @@ A Ruby on Rails learning platform where unions can manage member training course
 - Open section content item by item
 - Mark section complete
 - Complete courses
+- Take final quiz (if configured)
+- Receive completion email after first successful completion
 
 ## Tech Stack
 
@@ -50,6 +55,7 @@ A Ruby on Rails learning platform where unions can manage member training course
 - Rails: `7.1.x`
 - Database: PostgreSQL
 - Auth: Devise
+- Mail: Action Mailer (development testing via MailCatcher)
 - Storage: Active Storage
 
 ## Local Setup
@@ -74,6 +80,15 @@ bin/rails server
 ```
 
 Open: `http://localhost:3000`
+
+### 4) Run MailCatcher (for local email testing)
+
+```bash
+bundle exec mailcatcher
+```
+
+SMTP: `127.0.0.1:1025`  
+Inbox UI: `http://127.0.0.1:1080`
 
 ## Run Tests
 
@@ -113,6 +128,8 @@ git push
 - Routes: `config/routes.rb`
 - Admin controllers: `app/controllers/admin/`
 - Learner controllers: `app/controllers/course_lists_controller.rb`, `app/controllers/course_list_sections_controller.rb`
+- Quiz controller: `app/controllers/course_list_quizzes_controller.rb`
+- Mailers: `app/mailers/`
 - Landing page: `app/controllers/home_controller.rb`, `app/views/home/index.html.erb`
 - Styles/JS: `app/assets/stylesheets/application.css`, `app/assets/javascripts/application.js`
 
@@ -120,3 +137,4 @@ git push
 
 - Frontpage text changes are stored in DB and persist after restart.
 - Course order drag/drop persists in DB (`course_lists.position`).
+- Completion email is sent only once when a course first reaches completed state.
