@@ -83,7 +83,28 @@ class CourseListQuizzesController < ApplicationController
   def mark_quiz_complete!
     completion = current_user.course_completions.find_or_initialize_by(course_list: @course)
     completion.quiz_completed_at ||= Time.current
+    newly_completed = completion.completed_at.blank? && all_sections_completed_for_course?
+    completion.completed_at ||= Time.current if newly_completed
     completion.save!
+
+    return unless newly_completed
+
+    CourseCompletionMailer.with(user: current_user, course: @course)
+                          .completed_course_email
+                          .deliver_now
+  rescue StandardError => e
+    Rails.logger.error("Course completion email failed for user=#{current_user.id}, course=#{@course.id}: #{e.class} - #{e.message}")
+  end
+
+  def all_sections_completed_for_course?
+    total_sections = @course.course_list_sections.count
+    return false if total_sections.zero?
+
+    completed_sections = current_user.progresses
+                                     .joins(:course_list_section)
+                                     .where(completed: true, course_list_sections: { course_list_id: @course.id })
+                                     .count
+    completed_sections == total_sections
   end
 
   def normalized_question_index

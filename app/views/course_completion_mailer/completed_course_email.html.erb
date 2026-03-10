@@ -1,0 +1,27 @@
+<h1>You have successfully completed the course</h1>
+
+<p>
+  Congratulations! You completed:
+  <strong><%= @completed_course.title %></strong>
+</p>
+
+<p>
+  You are assigned to <strong><%= @union_count %></strong>
+  <%= @union_count == 1 ? "union" : "unions" %>:
+  <%= @unions.map(&:name).join(", ") %>
+</p>
+
+<h2>Courses available in your unions</h2>
+
+<% @courses_by_union.each do |union, courses| %>
+  <h3><%= union.name %></h3>
+  <% if courses.any? %>
+    <ul>
+      <% courses.each do |course| %>
+        <li><%= course.title %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No courses assigned to this union yet.</p>
+  <% end %>
+<% end %>

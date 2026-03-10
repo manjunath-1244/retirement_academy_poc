@@ -49,8 +49,20 @@ class CourseListsController < ApplicationController
       return
     end
 
+    newly_completed = completion.completed_at.blank?
     completion.completed_at ||= Time.current
     completion.save!
+
+    if newly_completed && all_sections_completed && completion.quiz_completed_at.present?
+      begin
+        CourseCompletionMailer.with(user: current_user, course: @course)
+                              .completed_course_email
+                              .deliver_now
+      rescue StandardError => e
+        Rails.logger.error("Course completion email failed for user=#{current_user.id}, course=#{@course.id}: #{e.class} - #{e.message}")
+      end
+    end
+
     redirect_to course_list_path(@course), notice: "Course completed successfully."
   end
 
